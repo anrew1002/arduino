@@ -11,11 +11,28 @@ print(client.connect(broker))
 client.loop_start()
 print("Publishing")
 
+flag = True
+start_second = 20
+duration = 20
+
+
 for _ in range(10):
-    state = "on" if random.randint(0, 1) else "off"
+    if duration < 10:
+        duration = 20
+    # лампочка загорается на 20 секунде
+    time.sleep(start_second)
+    state = "on"
     print(f"state is {state}")
-    client.publish("esp8266-fc6f/command", state)
-    time.sleep(random.randint(4, 10))
+    client.publish("esp8266-fc6f10/command", state)
+    time.sleep(duration)
+    duration -= 1
+
+    #по истечении времени погасает
+    state = "off"
+    print(f"state is {state}")
+    client.publish("esp8266-fc6f10/command", state)
+    #Времени до конца минуты
+    time.sleep(60 - duration - start_second)
 
 client.disconnect()
 client.loop_stop()
